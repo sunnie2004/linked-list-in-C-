@@ -1,0 +1,240 @@
+#include <stdio.h>
+#include <iostream>
+using namespace std;
+
+struct node{
+    int data;
+    node *next;
+};
+
+class List{
+    private:
+        node *head,*tail;
+    public:
+        List();
+        int Length();
+        void print();
+        void Insert(int n);
+        void InsertHead(int n);
+        void InsertAfter(int n,int m); //insert n after m
+        void InsertBefore(int n,int m); //insert n before m
+        void Delete(int n);
+        node* Find(int n);
+        node* Search(int n);
+        node* Reverse();
+};
+
+List::List()
+{
+    head = NULL;
+    tail = NULL;
+}
+
+
+void List::Insert(int n)
+{
+    node *tmp = new node;
+    tmp->data = n;
+    tmp->next = NULL;
+
+    if(head == NULL)
+    {
+        head = tmp;
+        tail = tmp;
+    }
+    else
+    {
+        tail->next = tmp;
+        tail = tail->next;
+    }
+}
+void List::InsertAfter(int n,int m)
+{
+    node *p = new node;
+    p->data = n;    
+
+    if(tail->data==m)
+    {
+        tail->next=p;
+        tail=tail->next;
+    }
+    else
+    {
+        node *tmp = Find(m);
+        if(tmp!=NULL)
+        {
+    
+            p->next = tmp->next;
+            tmp->next = p;
+        }
+    }
+}
+
+void List::InsertBefore(int n,int m)
+{
+    node *p = new node;
+    p->data = n;
+    
+    if(head->data == m)
+    {
+        p->next = head;
+        head = p;
+    }
+    else
+    {
+        node *tmp = Search(m);
+       
+        if(tmp!=NULL)
+        {
+            p->next = tmp->next;
+            tmp->next = p;
+        }
+    }
+}
+
+void List::InsertHead(int n)
+{
+    node *p=new node;
+    p->data=n;
+    p->next = head;
+    head = p;
+}
+void List::Delete(int n)
+{
+
+    if(head->data==n)
+    {
+        head=head->next;
+    }
+    else
+    {
+        node *tmp=Search(n);
+        node *target;
+        target=tmp->next; 
+        
+        if(tmp!=NULL)
+        {
+            tmp->next = tmp->next->next;
+            delete target;
+        }
+    }
+}
+
+
+
+node *List::Find(int n)
+{
+    node *p=head;
+    if(p==NULL)
+    {
+        cout << "empty list" <<endl;
+        return NULL;
+    }
+    else
+    {
+        while(p!=NULL){
+            if(p->data==n)
+                break;
+            if(p==tail){
+                cout<<"no this number1"<<endl;
+            }
+            
+            p=p->next;
+            
+        }
+        return p;
+    }
+}
+
+node *List::Search(int n)
+{
+    node *p=head;
+    node *frontnode = new node;
+    if(p==NULL)
+    {
+        cout << "empty list" <<endl;
+        return NULL;
+    }
+    else
+    {
+        while(p!=NULL)
+        {
+            if(p->data==n)
+                break;
+            if(p==tail){
+                cout<<"no this number2"<<endl;
+                return NULL;
+            }
+            
+            frontnode = p;
+            p=p->next;              
+            
+        }
+        return frontnode;
+    }
+}
+
+node *List::Reverse()   /*recursive*/
+{
+    node *current = new node;
+    node *pre = new node;
+    
+    current = head->next;
+    head->next=NULL;
+    
+    while(current!=NULL)
+    {
+        pre = current->next;
+        current->next = head;
+        head = current;
+        current = pre;
+    }
+    return head;
+}
+
+void List::print() {
+    node *p = head;
+    if(p==NULL)
+    {
+        cout << "empty list" <<endl;
+    }
+    else
+    {
+        while (p != NULL) {
+            cout << p->data << " \a";
+            p = p->next;
+        }
+        cout << endl;
+    }
+}
+
+int main()
+{
+    List l1;
+    l1.Insert(1);
+    l1.Insert(2);
+    l1.Insert(3);
+    l1.Insert(4);
+    l1.InsertHead(5);
+    l1.InsertAfter(6,3);
+    l1.InsertBefore(7,1);
+    l1.print();
+    
+    l1.InsertAfter(8,4);
+    l1.InsertAfter(9,5);
+    l1.InsertBefore(0,5);
+    l1.InsertBefore(10,8);
+    l1.print();
+    
+    l1.InsertAfter(11,13);    
+    l1.Delete(6);
+    l1.print();
+    l1.Delete(8);
+    l1.print();
+    l1.Delete(0);
+    l1.print();
+    l1.Reverse();
+    l1.print();
+    cout << "The End!" << endl;
+    return 0;
+}
